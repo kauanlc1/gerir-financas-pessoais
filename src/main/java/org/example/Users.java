@@ -11,6 +11,7 @@ public class Users {
     private String cpf;
     private String email;
     private String senha;
+    private boolean contaAtiva;
 
     public Users(@NotNull String nome, @NotNull String sobrenome, int idade, @NotNull String email, @NotNull String senha) {
         this.nome = nome;
