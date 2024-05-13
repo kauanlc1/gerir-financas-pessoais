@@ -8,5 +8,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 public class OrganizaDinApplication {
     public static void main(String[] args) {
         SpringApplication.run(OrganizaDinApplication.class, args);
+        System.out.println("Corretion ");
     }
 }
