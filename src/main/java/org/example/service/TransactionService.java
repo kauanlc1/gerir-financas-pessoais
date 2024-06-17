@@ -13,7 +13,7 @@ public class TransactionService {
     private TransactionRepository transactionRepository;
 
     public Transaction saveTransaction(Transaction transaction) {
-     return transactionRepository.save(transaction);
+        return transactionRepository.save(transaction);
     }
 
     public List<Transaction> getAllTransactions() {
