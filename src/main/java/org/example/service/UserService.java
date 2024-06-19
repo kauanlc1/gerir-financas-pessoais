@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -23,5 +24,14 @@ public class UserService {
     public Users findByUsername(String nomeUsuario) {
         return userRepository.findByNomeUsuario(nomeUsuario)
                 .orElse(null);
+    }
+
+    public Users findById(UUID id) {
+        return userRepository.findById(id)
+                .orElse(null);
+    }
+
+    public void removeById(UUID id) {
+        userRepository.deleteById(id);
     }
 }
