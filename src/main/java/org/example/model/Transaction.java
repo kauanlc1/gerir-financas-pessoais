@@ -23,7 +23,7 @@ public class Transaction {
     private Double amount;
     private Date date;
     @ManyToOne
-    private Users user;
+    private Users usuario;
     @ManyToOne
     private Category category;
 }
