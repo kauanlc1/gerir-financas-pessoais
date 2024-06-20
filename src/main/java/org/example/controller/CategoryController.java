@@ -1,7 +1,7 @@
 package org.example.controller;
 
-import org.example.Exceptions.CategoryExistingException;
-import org.example.Exceptions.CategoryNotFoundException;
+import org.example.exceptions.CategoryExistingException;
+import org.example.exceptions.CategoryNotFoundException;
 import org.example.model.Category;
 import org.example.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class CategoryController {
             String descricaoCategoria = category.getName();
             return ResponseEntity.ok("Categoria '" + descricaoCategoria + "' registrada com sucesso.");
         } catch (CategoryExistingException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
             return new ResponseEntity<>("Erro ao registrar a categoria " + category.getName(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

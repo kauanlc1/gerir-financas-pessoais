@@ -1,4 +1,4 @@
-package org.example.Exceptions;
+package org.example.exceptions;
 
 public class CategoryExistingException extends RuntimeException {
     public CategoryExistingException(String message) {

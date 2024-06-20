@@ -1,7 +1,7 @@
 package org.example.service;
 
-import org.example.Exceptions.CategoryExistingException;
-import org.example.Exceptions.CategoryNotFoundException;
+import org.example.exceptions.CategoryExistingException;
+import org.example.exceptions.CategoryNotFoundException;
 import org.example.model.Category;
 import org.example.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
