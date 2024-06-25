@@ -1,14 +1,19 @@
 package org.example.service;
 
+import org.apache.catalina.User;
+import org.example.dtos.UserLoginRecordDTO;
 import org.example.model.Users;
 import org.example.repository.UserRepository;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -16,12 +21,25 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public Users saveUser(Users user) {
-        return userRepository.save(user);
+    public ResponseEntity<?> saveUser(Users user) {
+        if (userRepository.existsByNomeUsuario(user.getNomeUsuario())) {
+            return ResponseEntity.status(401).body("Já existe um cadastro com este nome de usuário registrado.");
+        }
+
+        Users savedUser = userRepository.save(user);
+        return ResponseEntity.ok(savedUser);
     }
 
     public List<Users> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public ResponseEntity<?> getUserById(UUID id) {
+        Optional<Users> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return ResponseEntity.ok(user.get());
+        }
+        return ResponseEntity.status(404).body("Não foram encotrados dados vinculados a este ID.");
     }
 
     public Users findByUsername(String nomeUsuario) {
@@ -29,17 +47,20 @@ public class UserService {
                 .orElse(null);
     }
 
-    public Users findById(UUID id) {
-        return userRepository.findById(id)
-                .orElse(null);
+    public ResponseEntity<String> removeById(UUID id) {
+        Optional<Users> usuario = userRepository.findById(id);
+
+        if (usuario.isPresent()) {
+            userRepository.deleteById(id);
+            return ResponseEntity.ok("Usuário removido com sucesso.");
+        } else {
+            return ResponseEntity.status(404).body("Não foram encotrados dados vinculados a este ID.");
+        }
     }
 
-    public void removeById(UUID id) {
-        userRepository.deleteById(id);
-    }
-
-    public Users updateUser(UUID id, Map<String, Object> updates) {
+    public ResponseEntity<?> updateUser(UUID id, Map<String, Object> updates) {
         Users existingUser = userRepository.findById(id).orElse(null);
+
         if (existingUser != null) {
             BeanWrapper beanWrapper = new BeanWrapperImpl(existingUser);
             updates.forEach((key, value) -> {
@@ -47,8 +68,26 @@ public class UserService {
                     beanWrapper.setPropertyValue(key, value);
                 }
             });
-            return userRepository.save(existingUser);
+            userRepository.save(existingUser);
+            return ResponseEntity.ok(existingUser);
         }
-        return null;
+
+        return ResponseEntity.status(404).body("Usuário solicitado não encontrado.");
+    }
+
+    public ResponseEntity<String> loginUser(UserLoginRecordDTO login) {
+        if (login.nomeUsuario() == null) {
+            return ResponseEntity.status(401).body("Nome de usuário é obrigatório");
+        }
+        if (login.senha() == null) {
+            return ResponseEntity.status(401).body("Senha é obrigatória");
+        }
+
+        Users foundUser = findByUsername(login.nomeUsuario());
+        if (foundUser != null && foundUser.getSenha().equals(login.senha())) {
+            return ResponseEntity.ok("Login successful");
+        } else {
+            return ResponseEntity.status(401).body("Invalid credentials");
+        }
     }
 }
