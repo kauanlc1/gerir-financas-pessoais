@@ -27,7 +27,6 @@ public class CategoryService {
         if (categoryRepository.existsByName(category.getName())) {
             throw new CategoryExistingException("Categoria com o nome '" + category.getName() + "' já se encontra no sistema.");
         }
-
         categoryRepository.save(category);
     }
 
