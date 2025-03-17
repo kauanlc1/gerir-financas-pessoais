@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.dtos.TransactionDTO;
 import org.example.model.Transaction;
 import org.example.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
@@ -17,12 +19,23 @@ public class TransactionService {
         return transactionRepository.save(transaction);
     }
 
-    public List<Transaction> getAllTransactions() {
-        return transactionRepository.findAll();
+    public List<TransactionDTO> getAllTransactions() {
+        return transactionRepository.findAll().stream()
+                .map(transaction -> new TransactionDTO(transaction.getId(), transaction.getDescription(), transaction.getAmount(),
+                        transaction.getDate(), transaction.getUsuario().getNomeUsuario(), transaction.getCategory().getName()))
+                .collect(Collectors.toList());
     }
 
-    public Optional<Transaction> getTransactionById(Long id) {
-        return transactionRepository.findById(id);
+    public Optional<TransactionDTO> getTransactionById(Long id) {
+        return transactionRepository.findById(id)
+                .map(transaction -> new TransactionDTO(
+                        transaction.getId(),
+                        transaction.getDescription(),
+                        transaction.getAmount(),
+                        transaction.getDate(),
+                        transaction.getUsuario().getNomeUsuario(),
+                        transaction.getCategory().getName()
+                ));
     }
 
     public boolean removeById(Long id) {

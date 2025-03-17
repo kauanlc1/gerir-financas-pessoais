@@ -1,13 +1,12 @@
 package org.example.controller;
 
+import org.example.dtos.TransactionDTO;
 import org.example.model.Transaction;
 import org.example.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -18,13 +17,12 @@ public class TransactionController {
 
     @GetMapping("/rescue")
     public ResponseEntity<?> getAllTransaction() {
-        List<Transaction> transactionsList = transactionService.getAllTransactions();
-        return ResponseEntity.ok(transactionsList);
+        return ResponseEntity.ok(transactionService.getAllTransactions());
     }
 
     @GetMapping("/rescue/{id}")
     public ResponseEntity<?> getOneTransaction(@PathVariable(value = "id") Long id) {
-        Optional<Transaction> transaction = transactionService.getTransactionById(id);
+        Optional<TransactionDTO> transaction = transactionService.getTransactionById(id);
         if (transaction.isPresent()) {
             return new ResponseEntity<>(transaction.get(), HttpStatus.OK);
         } else {
