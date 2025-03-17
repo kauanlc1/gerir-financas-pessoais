@@ -1,6 +1,5 @@
 package org.example.service;
 
-import org.apache.catalina.User;
 import org.example.dtos.UserLoginRecordDTO;
 import org.example.model.Users;
 import org.example.repository.UserRepository;
@@ -8,9 +7,7 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +20,7 @@ public class UserService {
 
     public ResponseEntity<?> saveUser(Users user) {
         if (userRepository.existsByNomeUsuario(user.getNomeUsuario())) {
-            return ResponseEntity.status(401).body("Já existe um cadastro com este nome de usuário registrado.");
+            return ResponseEntity.status(400).body("Já existe um cadastro com este nome de usuário registrado.");
         }
 
         Users savedUser = userRepository.save(user);
@@ -39,7 +36,7 @@ public class UserService {
         if (user.isPresent()) {
             return ResponseEntity.ok(user.get());
         }
-        return ResponseEntity.status(404).body("Não foram encotrados dados vinculados a este ID.");
+        return ResponseEntity.status(404).body("Não foram encontrados dados vinculados a este ID.");
     }
 
     public Users findByUsername(String nomeUsuario) {
@@ -54,7 +51,7 @@ public class UserService {
             userRepository.deleteById(id);
             return ResponseEntity.ok("Usuário removido com sucesso.");
         } else {
-            return ResponseEntity.status(404).body("Não foram encotrados dados vinculados a este ID.");
+            return ResponseEntity.status(404).body("Não foram encontrados dados vinculados a este ID.");
         }
     }
 
