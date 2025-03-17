@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 public class CategoryService {
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     public List<Category> findAll() {
         return categoryRepository.findAll();
@@ -35,10 +35,5 @@ public class CategoryService {
             throw new CategoryNotFoundException("Categoria com ID " + id + " não encontrada.");
         }
         categoryRepository.deleteById(id);
-    }
-
-    public boolean existsById(Long id) {
-        categoryRepository.existsById(id);
-        return false;
     }
 }
